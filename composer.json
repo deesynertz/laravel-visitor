@@ -1,0 +1,43 @@
+{
+    "name": "deesynertz/laravel-visitor",
+    "description": "laravel-visitor",
+    "keywords": [
+        "visitor", "laravel", "php", "laravel-visitor"
+    ],
+    "homepage": "https://github.com/deesynertz/laravel-visitor",
+    "type": "library",
+    "license": "MIT",
+    "authors":[
+        {
+            "name":"Deogratias Alison",
+            "email":"deesynertz@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Deesynertz\\Visitor\\": "src/"
+        },
+        "files": [
+            "src/Foundation/helpers.php"
+        ]
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Deesynertz\\Visitor\\VisitorServiceProvider"
+            ]
+        }
+    },
+    "scripts": {
+        "post-install-cmd": [
+            "@php artisan vendor:publish --tag=deesynertz-visitor-migrations --force",
+            "@php artisan vendor:publish --tag=deesynertz-visitor-config --force"
+        ]
+    },
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">=5.5.0",
+        "illuminate/support": ">=5.2.7",
+        "illuminate/session": ">=5.2.7"
+    }
+}
