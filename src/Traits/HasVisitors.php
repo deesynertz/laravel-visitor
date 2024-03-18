@@ -6,9 +6,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 
-trait HasVistors
+trait HasVisitors
 {
-    public function propertyables(): MorphOne
+    public function propertyable(): MorphOne
     {
         return $this->morphOne(config('property-visitor.models.property_visitings'), 'propertyable', 'propertyable_type', 'propertyable_id', 'id');
     }

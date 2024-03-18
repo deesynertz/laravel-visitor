@@ -13,19 +13,6 @@ class CreatePropertyVisitingsTable extends Migration
      */
     public function up()
     {
-        // 'property_visitings' => 'property_visitings',
-        // 'property_has_visitors' => 'property_has_visitors',
-        // 'visitor_common_reasons' => 'visitor_common_reasons',
-        // 'property_custodians' => 'property_custodians',
-        // 'visitor_line_items' => 'visitor_line_items',
-
-        // 'property_visiting_key' => 'property_visiting_id', //default 'property_visiting_id',
-        // 'property_visitor_key' => 'property_visitor_id', //default 'property_has_visitor_id',
-        // 'visitor_reason_key' => 'visitor_reason_id', //default 'visitor_common_reason_id',
-        // 'property_custodian_key' => 'property_custodian_id', //default 'property_custodian_id',
-        // 'visitor_line_item_key' => 'visitor_term_id', //default 'visitor_line_item_id',
-
-        // $models = config('property-visitor.models');
         $tableNames = config('property-visitor.table_names');
         $columnNames = config('property-visitor.column_names');
 
