@@ -14,7 +14,7 @@ trait VistorServiceTrait
             ->with('hasVisitors')
             ->with('propertyCustodians')
             ->withCount(['hasVisitors as visitors_counts'])
-            ->withCount(['propertyCustodians as visiting_count']);
+            ->withCount(['propertyCustodians as property_custodian_count']);
     }
 
 
@@ -25,7 +25,7 @@ trait VistorServiceTrait
         return VisitorCommonReason::query();
     }
 
-    function createOrUpdatePropertyInVisitor($target, $action) {
+    function createOrUpdatePropertyInVisitor($target, $action, $values = []) {
         $callback = (object)[
             'status' => false,
             'code' => 404,
@@ -34,22 +34,29 @@ trait VistorServiceTrait
 
         if ($action == 'add') {
             # create
-            $callback->status = createdInstance($target->propertyable()->firstOrCreate());
+            if (!isset($values['status'])) {
+                $values = addElement($values, ['status' => true]);
+            }
+
+            if (!empty($values)) {
+                $callback->status = createdInstance($target->propertyable()->firstOrCreate($values));
+            }
+
             if ($callback->status) {
                 $callback->code = 200;
             }
         } else {
             # change
-            // $propertyable = $target->propertyable;
-            
-            // if () {
-                
-            // }
-            // $callback->status = $propertyable->update();
+            $propertyable = $target->propertyable;
+            $values = addElement($values, ['status' => !$propertyable->status]);
 
-            // if ($callback->status) {
-            //     $callback->code = 201;
-            // }
+            if (!empty($values)) {
+                $callback->status = $propertyable->update($values);
+            }
+
+            if ($callback->status) {
+                $callback->code = 201;
+            }
         }
 
         return $callback;

@@ -1,6 +1,8 @@
 <?php
 
 use Deesynertz\Visitor\Services\VisitorService;
+use SimpleSoftwareIO\QrCode\Facades\QrCode as FacadesQrCode;
+
 
 
 /*
@@ -47,3 +49,14 @@ if (!function_exists('responseBatch')) {
         return isset($params->query) ? $resultQuery:$resultQuery->get(); ;
     }
 }
+
+if (!function_exists('QRCodeGeneratorHelper')) {
+    function QRCodeGeneratorHelper($data, $size = 350)
+    {
+        return FacadesQrCode::size($size)->generate($data);
+    }
+}
+
+
+
+

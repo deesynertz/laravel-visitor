@@ -24,9 +24,15 @@ class VisitorService
         return responseBatch($results, $params, $perPage);
     }
 
-    function getVisitableProperies($params = null, $perPage = null) {
+    function getVisitableProperties($params = null, $perPage = null) {
         $results = $this->visitableProperies()->whereHasPropertyable($params);
         return responseBatch($results, $params, $perPage);
+    }
+
+    function getVisitablePropertyById($params) {
+        return $this->visitableProperies()->whereHasPropertyable($params)
+            ->find($params->id);
+
     }
     
 }

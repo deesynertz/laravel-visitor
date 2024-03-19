@@ -18,7 +18,9 @@ class CreatePropertyVisitingsTable extends Migration
 
         Schema::create($tableNames['property_visitings'], function (Blueprint $table) {
             $table->id();
+            $table->string('property_code', 12)->unique(); # receice uniq value as string of 12 character
             $table->morphs('propertyable');
+            $table->boolean('status')->default(true);
             $table->timestamps();
         });
 

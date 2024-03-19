@@ -13,6 +13,7 @@ class PropertyVisiting extends Model
 {
     use HasFactory;
     protected $guarded  = ['id'];
+    protected $casts = ['status' => 'boolean'];
 
     public function propertyable(): MorphTo
     {
