@@ -35,3 +35,15 @@ if (!function_exists('getChildsReasons')) {
        return (new VisitorService)->getCommonReasons('childs');
     }
 }
+
+
+if (!function_exists('responseBatch')) {
+    function responseBatch($resultQuery, $params = null, $perPage = null)
+    {
+        if (!is_null($perPage)) {
+            return $resultQuery->paginate($perPage)->appends(arr_only($params));
+        }
+        
+        return isset($params->query) ? $resultQuery:$resultQuery->get(); ;
+    }
+}

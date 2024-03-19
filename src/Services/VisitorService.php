@@ -17,5 +17,19 @@ class VisitorService
             )
             ->get();
     }
+
+    function getAllVisitors($params = null, $perPage = null) {
+        $results = $this->visitorsInstances()
+            ->when(isset($params->property_type) && isset($params->property_ids), fn ($query) => 
+            
+                $query->whereHas('property', 
+                    fn ($propertyQuery) => $propertyQuery->wherePropertyableType($params->property_type)
+                        ->whereIn('propertyable_id', $params->property_ids)
+                )
+            );
+
+
+        return responseBatch($results, $params, $perPage);
+    }
     
 }

@@ -2,17 +2,16 @@
 
 namespace Deesynertz\Visitor\Traits;
 
+use Deesynertz\Visitor\Models\PropertyHasVisitor;
 use Deesynertz\Visitor\Models\VisitorCommonReason;
 
 trait VistorServiceTrait
 {
     function commonReasons() {
-
         return VisitorCommonReason::query();
     }
 
     function createOrUpdatePropertyInVisitor($target, $action) {
-
         $callback = (object)[
             'status' => false,
             'code' => 404,
@@ -40,6 +39,16 @@ trait VistorServiceTrait
         }
 
         return $callback;
+    }
+
+
+
+    # visitors
+    function visitorsInstances() {
+        return PropertyHasVisitor::with('property')
+            ->with('user')
+            ->with('visitorLineItems')
+            ->withCount('visitorLineItems as visiting_count');
     }
         
 }
