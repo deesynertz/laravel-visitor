@@ -30,4 +30,8 @@ class PropertyHasVisitor extends Model
         return $this->hasMany(VisitorLineItem::class, config('property-visitor.column_names')['property_visitor_key'], 'id');
     }
 
+    public function scopeWhereHasProperty($query, $params) {
+        return $query->whereHas('property',  fn ($propertyQuery) => $propertyQuery->whereHasPropertyable($params));
+    }
+
 }

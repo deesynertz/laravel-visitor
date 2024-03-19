@@ -3,10 +3,24 @@
 namespace Deesynertz\Visitor\Traits;
 
 use Deesynertz\Visitor\Models\PropertyHasVisitor;
+use Deesynertz\Visitor\Models\PropertyVisiting;
 use Deesynertz\Visitor\Models\VisitorCommonReason;
 
 trait VistorServiceTrait
 {
+    # Property
+    function visitableProperies() {
+        return PropertyVisiting::with('propertyable')
+            ->with('hasVisitors')
+            ->with('propertyCustodians')
+            ->withCount(['hasVisitors as visitors_counts'])
+            ->withCount(['propertyCustodians as visiting_count']);
+    }
+
+
+  
+
+
     function commonReasons() {
         return VisitorCommonReason::query();
     }
@@ -43,12 +57,13 @@ trait VistorServiceTrait
 
 
 
+
     # visitors
     function visitorsInstances() {
         return PropertyHasVisitor::with('property')
             ->with('user')
             ->with('visitorLineItems')
-            ->withCount('visitorLineItems as visiting_count');
+            ->withCount(['visitorLineItems as visiting_count']);
     }
         
 }

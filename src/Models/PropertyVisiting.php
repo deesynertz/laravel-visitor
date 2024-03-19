@@ -31,6 +31,12 @@ class PropertyVisiting extends Model
     
 
     ## CRUID 
+    public function scopeWhereHasPropertyable($query, $params) {
+        return $query->has('propertyable')
+            ->when(isset($params->property_type) && isset($params->property_ids), fn ($query) => 
+               $query->wherePropertyableType($params->property_type)->whereIn('propertyable_id', $params->property_ids)
+            );
+    }   
 
     
 }

@@ -9,26 +9,23 @@ class VisitorService
     use VistorServiceTrait;
      
     function getCommonReasons($flag = null) {
-        return $this->commonReasons()
+        $results = $this->commonReasons()
             ->when((!is_null($flag) || !constAll()), 
                 fn ($query) => $query
                 ->when($flag == 'parent', fn ($query) => $query->whereNull('parent_id'))
                 ->when($flag == 'childs', fn ($query) => $query->whereNotNull('parent_id'))
-            )
-            ->get();
+            );
+
+        return responseBatch($results, ['flag' => $flag], null);
     }
 
     function getAllVisitors($params = null, $perPage = null) {
-        $results = $this->visitorsInstances()
-            ->when(isset($params->property_type) && isset($params->property_ids), fn ($query) => 
-            
-                $query->whereHas('property', 
-                    fn ($propertyQuery) => $propertyQuery->wherePropertyableType($params->property_type)
-                        ->whereIn('propertyable_id', $params->property_ids)
-                )
-            );
+        $results = $this->visitorsInstances()->whereHasProperty($params);
+        return responseBatch($results, $params, $perPage);
+    }
 
-
+    function getVisitableProperies($params = null, $perPage = null) {
+        $results = $this->visitableProperies()->whereHasPropertyable($params);
         return responseBatch($results, $params, $perPage);
     }
     
