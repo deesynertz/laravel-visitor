@@ -21,6 +21,7 @@ class PropertyHasVisitor extends Model
 
     public function user(): BelongsTo
     {
+        // $user = app(config('property-visitor.models.users'));
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
 

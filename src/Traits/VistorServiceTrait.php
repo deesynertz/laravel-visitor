@@ -65,5 +65,13 @@ trait VistorServiceTrait
             ->with('visitorLineItems')
             ->withCount(['visitorLineItems as visiting_count']);
     }
+
+    function storeOrRetrievePropertyHasVisitor(PropertyVisiting $propertyVisiting, $values) {
+        return $propertyVisiting->hasVisitors()->firstOrCreate($values);
+    }
+
+    function storeVisitorLineItems(PropertyHasVisitor $propertyHasVisitor, $values) {
+        return $propertyHasVisitor->visitorLineItems()->create($values);
+    }
         
 }

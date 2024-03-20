@@ -2,6 +2,8 @@
 
 namespace Deesynertz\Visitor\Services;
 
+use Illuminate\Support\Facades\DB;
+use Deesynertz\Visitor\Models\PropertyVisiting;
 use Deesynertz\Visitor\Traits\VistorServiceTrait;
 
 class VisitorService
@@ -43,5 +45,33 @@ class VisitorService
             ->wherePropertyCode($params->property_code)
             ->first();
     }
+
+    /**
+     */
+
+    function handleVisitingAction(PropertyVisiting $propertyVisiting, $user, $visitingItems) {
+        # create of get visiting if exist of the same person and house
+
+        $feedback = httpResponseAttr();
+        DB::beginTransaction();
+        try {
+            $hasVisitor = $this->storeOrRetrievePropertyHasVisitor($propertyVisiting, ['user_id' => $user->id]);
+            if (createdInstance($hasVisitor) && !empty($visitingItems)) {
+                # add to the visitingItems
+                if ($feedback->status = createdInstance($this->storeVisitorLineItems($hasVisitor, $visitingItems))) {
+                    DB::commit();
+                    $feedback->code = 200;
+                    $feedback->content = $hasVisitor;
+                }
+            }
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            $feedback->message = $th->getMessage();
+        }
+
+        return $feedback;
+    }
+
+    
     
 }

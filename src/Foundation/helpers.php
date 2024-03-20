@@ -56,7 +56,7 @@ if (!function_exists('httpResponseAttr')) {
         return (object)[
             'status' => $status,
             'code' => $code,
-            'message' => $message ?? 'something went wrong!',
+            'message' => $message ?? 'Something went wrong!',
             'content' => $content
         ];
     }

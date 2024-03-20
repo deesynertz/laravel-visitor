@@ -72,7 +72,7 @@ class CreatePropertyVisitingsTable extends Migration
                 ->cascadeOnUpdate();
             $table->nullableMorphs('visitorable');
             $table->dateTime('starting');
-            $table->dateTime('ending');
+            $table->dateTime('ending')->nullable();
             $table->timestamps();
         });
     }
