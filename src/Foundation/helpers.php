@@ -17,24 +17,24 @@ use SimpleSoftwareIO\QrCode\Facades\QrCode as FacadesQrCode;
 */
 
 if (!function_exists('getCommonReasonHelper')) {
-    function getCommonReasonHelper()
+    function getCommonReasonHelper($id = null)
     {
-       return (new VisitorService)->getCommonReasons();
+       return (new VisitorService)->getCommonReasons(null, $id);
     }
 }
 
 
 if (!function_exists('getMainReasons')) {
-    function getMainReasons()
+    function getMainReasons($id = null)
     {
-       return (new VisitorService)->getCommonReasons('parent');
+       return (new VisitorService)->getCommonReasons('parent', $id);
     }
 }
 
 if (!function_exists('getChildsReasons')) {
-    function getChildsReasons()
+    function getChildsReasons($id = null)
     {
-       return (new VisitorService)->getCommonReasons('childs');
+       return (new VisitorService)->getCommonReasons('childs', $id);
     }
 }
 
@@ -47,6 +47,18 @@ if (!function_exists('responseBatch')) {
         }
         
         return isset($params->query) ? $resultQuery:$resultQuery->get(); ;
+    }
+}
+
+if (!function_exists('httpResponseAttr')) {
+    function httpResponseAttr($status = false, $code = 404, $message = null, $content = null)
+    {
+        return (object)[
+            'status' => $status,
+            'code' => $code,
+            'message' => $message ?? 'something went wrong!',
+            'content' => $content
+        ];
     }
 }
 

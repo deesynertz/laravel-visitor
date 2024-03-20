@@ -18,19 +18,12 @@ trait VistorServiceTrait
     }
 
 
-  
-
-
     function commonReasons() {
         return VisitorCommonReason::query();
     }
 
     function createOrUpdatePropertyInVisitor($target, $action, $values = []) {
-        $callback = (object)[
-            'status' => false,
-            'code' => 404,
-            'message' => '',
-        ];
+        $callback = httpResponseAttr();
 
         if ($action == 'add') {
             # create
