@@ -34,11 +34,11 @@ class PropertyVisiting extends Model
     public function hasVisitors(): HasMany
     {
         return $this->hasMany(
-                app(config('property-visitor.models.property_visitings')),
-                config('property-visitor.column_names.property_visiting_key'), 
-                'id'
-            )
-            ->withCount(['visitorLineItems as visitor_line_counts']);
+            config('property-visitor.models.property_has_visitors'), 
+            config('property-visitor.column_names.property_visiting_key'), 
+            'id'
+        )
+        ->withCount(['visitorLineItems as visitor_line_counts']);;
     }
 
     public function propertyCustodians(): HasMany

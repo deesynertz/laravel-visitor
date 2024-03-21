@@ -73,6 +73,7 @@ class CreatePropertyVisitingsTable extends Migration
             $table->nullableMorphs('visitorable');
             $table->dateTime('starting');
             $table->dateTime('ending')->nullable();
+            $table->longText('description')->nullable();
             $table->timestamps();
         });
     }
