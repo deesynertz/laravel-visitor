@@ -17,7 +17,7 @@ class PropertyHasVisitor extends Model
 
     public function property(): BelongsTo
     {
-        return $this->belongsTo(PropertyVisiting::class, config('property-visitor.column_names')['property_visiting_key'], 'id');
+        return $this->belongsTo(PropertyVisiting::class, config('property-visitor.column_names.property_visiting_key'), 'id');
     }
 
     public function user(): BelongsTo
@@ -29,13 +29,21 @@ class PropertyHasVisitor extends Model
 
     public function visitorLineItems(): HasMany
     {
-        return $this->hasMany(VisitorLineItem::class, config('property-visitor.column_names')['property_visitor_key'], 'id')
+        return $this->hasMany(
+                app(config('property-visitor.models.visitor_line_items')), 
+                config('property-visitor.column_names.property_visitor_key'),
+                'id'
+            )
             ->with('visitorable');
     }
 
     public function visitorLineItem(): HasOne
     {
-        return $this->hasOne(VisitorLineItem::class, config('property-visitor.column_names')['property_visitor_key'], 'id')
+        return $this->hasOne(
+                app(config('property-visitor.models.visitor_line_items')), 
+                config('property-visitor.column_names.property_visitor_key'), 
+                'id'
+            )
             ->with('visitorable')
             ->with('visitingReason')
             ->latest('id');

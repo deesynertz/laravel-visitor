@@ -3,8 +3,6 @@
 namespace Deesynertz\Visitor\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Deesynertz\Visitor\Models\PropertyCustodian;
-use Deesynertz\Visitor\Models\PropertyHasVisitor;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -33,17 +31,23 @@ class PropertyVisiting extends Model
             );
     }
 
-    
-
     public function hasVisitors(): HasMany
     {
-        return $this->hasMany(PropertyHasVisitor::class, config('property-visitor.column_names')['property_visiting_key'], 'id')
+        return $this->hasMany(
+                app(config('property-visitor.models.property_visitings')),
+                config('property-visitor.column_names.property_visiting_key'), 
+                'id'
+            )
             ->withCount(['visitorLineItems as visitor_line_counts']);
     }
 
     public function propertyCustodians(): HasMany
     {
-        return $this->hasMany(PropertyCustodian::class, config('property-visitor.column_names')['property_visiting_key'], 'id');
+        return $this->hasMany( 
+            app(config('property-visitor.models.property_custodians')),
+            config('property-visitor.column_names.property_visiting_key'), 
+            'id'
+        );
     }
     
 
