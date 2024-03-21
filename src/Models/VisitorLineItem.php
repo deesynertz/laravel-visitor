@@ -19,6 +19,11 @@ class VisitorLineItem extends Model
     //     'status'   => 'boolean'
     // ];
 
+    // public function getEndingAttribute()
+    // {
+    //     return is_null()$this->morphTo('visitorable', 'visitorable_type', 'visitorable_id', 'id');
+    // }
+
     public function visitorable(): MorphTo
     {
         return $this->morphTo('visitorable', 'visitorable_type', 'visitorable_id', 'id');

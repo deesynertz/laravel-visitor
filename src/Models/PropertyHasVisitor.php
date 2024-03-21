@@ -5,6 +5,7 @@ namespace Deesynertz\Visitor\Models;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Deesynertz\Visitor\Models\VisitorLineItem;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -28,7 +29,16 @@ class PropertyHasVisitor extends Model
 
     public function visitorLineItems(): HasMany
     {
-        return $this->hasMany(VisitorLineItem::class, config('property-visitor.column_names')['property_visitor_key'], 'id');
+        return $this->hasMany(VisitorLineItem::class, config('property-visitor.column_names')['property_visitor_key'], 'id')
+            ->with('visitorable');
+    }
+
+    public function visitorLineItem(): HasOne
+    {
+        return $this->hasOne(VisitorLineItem::class, config('property-visitor.column_names')['property_visitor_key'], 'id')
+            ->with('visitorable')
+            ->with('visitingReason')
+            ->latest('id');
     }
 
     public function scopeWhereHasProperty($query, $params) {

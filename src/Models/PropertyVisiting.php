@@ -8,6 +8,7 @@ use Deesynertz\Visitor\Models\PropertyHasVisitor;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 class PropertyVisiting extends Model
 {
@@ -20,9 +21,24 @@ class PropertyVisiting extends Model
         return $this->morphTo('propertyable', 'propertyable_type', 'propertyable_id', 'id');
     }
 
+    public function visitorTerms(): HasManyThrough
+    {
+        return $this->hasManyThrough(
+                app(config('property-visitor.models.visitor_line_items')),
+                app(config('property-visitor.models.property_has_visitors')),
+                config('property-visitor.column_names.property_visiting_key'), 
+                config('property-visitor.column_names.property_visitor_key'), 
+                'id',
+                'id'
+            );
+    }
+
+    
+
     public function hasVisitors(): HasMany
     {
-        return $this->hasMany(PropertyHasVisitor::class, config('property-visitor.column_names')['property_visiting_key'], 'id');
+        return $this->hasMany(PropertyHasVisitor::class, config('property-visitor.column_names')['property_visiting_key'], 'id')
+            ->withCount(['visitorLineItems as visitor_line_counts']);
     }
 
     public function propertyCustodians(): HasMany
