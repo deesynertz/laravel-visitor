@@ -15,9 +15,7 @@ class VisitorCommonReason extends Model
 
     public function mainReason(): BelongsTo
     {
-        return $this->belongsTo(self::class, 'parent_id', 'id')
-            ->with('subReasons')
-            ->withCount('subReasons as sub_reasons_count');
+        return $this->belongsTo(VisitorCommonReason::class, 'parent_id', 'id')->withCount('subReasons as sub_reasons_count');
     }
 
     public function visitorLineItems(): HasMany
@@ -27,7 +25,6 @@ class VisitorCommonReason extends Model
 
     public function subReasons(): HasMany
     {
-        return $this->hasMany(self::class, 'parent_id', 'id')
-            ->with('mainReason');
+        return $this->hasMany(VisitorCommonReason::class, 'parent_id', 'id');
     }
 }

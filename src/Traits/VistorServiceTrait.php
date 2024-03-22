@@ -11,7 +11,7 @@ trait VistorServiceTrait
     # Property
     function visitableProperies() {
         return PropertyVisiting::with('propertyable')
-            ->with('hasVisitors')
+            ->with(['hasVisitors' => fn ($query) => $query->orderBy('created_at', 'DESC')])
             ->with('propertyCustodians')
             ->withCount(['hasVisitors as visitors_counts'])
             ->withCount(['propertyCustodians as property_custodian_count']);
