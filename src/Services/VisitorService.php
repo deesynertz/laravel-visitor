@@ -48,6 +48,37 @@ class VisitorService
 
     /**
      */
+    
+    function visitingInfoById($id) {
+        $callback = null;
+
+        if (!is_null($visitorLineItem = $this->findVisitorLineItem($id))) {
+            $propertyHasVisitor = $visitorLineItem->propertyHasVisitor;
+
+            $userInfo = [
+                'name' => ($user = $propertyHasVisitor->user)->name,
+                'phone' => $user->phone,
+                'imageUrl' => $user->avatar,
+            ];
+
+            $callback = addElement($callback, $userInfo);
+
+            $houseInfo = [
+                'house_no' => displayBlockNumber($propertyHasVisitor->propertyable, false),
+                'unit_no' => !is_null($visitorable = $visitorLineItem->visitorable) ? displayBlockNumber($visitorable):null,
+            ];
+            $callback = addElement($callback, $houseInfo);
+
+            $visitingInstance = [
+                'starting' => $visitorLineItem->starting,
+                'reason' => $visitorLineItem->content
+            ];
+            $callback = addElement($callback, $visitingInstance);
+        }
+
+        return $callback;
+
+    }
 
     function handleVisitingAction(PropertyVisiting $propertyVisiting, $user, $visitingItems) {
         # create of get visiting if exist of the same person and house
@@ -63,6 +94,25 @@ class VisitorService
                     $feedback->code = 200;
                     $feedback->content = $hasVisitor;
                 }
+            }
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            $feedback->message = $th->getMessage();
+        }
+
+        return $feedback;
+    }
+
+    function handleVisitorLineItemUpdate($id, $visitingItems) {
+        $feedback = httpResponseAttr();
+        DB::beginTransaction();
+        try {
+            if (!is_null($visitorLineItem = $this->findVisitorLineItem($id))) {
+                $feedback->status = $this->updateVisitorLineItems($visitorLineItem, $visitingItems);
+                $visitorLineItem->refresh();
+                DB::commit();
+                $feedback->code = 200;
+                $feedback->content = $visitorLineItem;
             }
         } catch (\Throwable $th) {
             DB::rollBack();

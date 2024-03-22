@@ -38,6 +38,21 @@ if (!function_exists('getChildsReasons')) {
     }
 }
 
+if (!function_exists('updateEndingAttr')) {
+    function updateEndingAttr($id, $dateTime = null)
+    {
+        $values = ['ending' => is_null($dateTime) ? now():$dateTime];
+        return (new VisitorService)->handleVisitorLineItemUpdate($id, $values);
+    }
+}
+
+if (!function_exists('visitingInfoById')) {
+    function visitingInfoById($id)
+    {
+        return (new VisitorService)->visitingInfoById($id);
+    }
+}
+
 
 if (!function_exists('responseBatch')) {
     function responseBatch($resultQuery, $params = null, $perPage = null)

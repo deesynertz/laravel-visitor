@@ -2,8 +2,9 @@
 
 namespace Deesynertz\Visitor\Traits;
 
-use Deesynertz\Visitor\Models\PropertyHasVisitor;
+use Deesynertz\Visitor\Models\VisitorLineItem;
 use Deesynertz\Visitor\Models\PropertyVisiting;
+use Deesynertz\Visitor\Models\PropertyHasVisitor;
 use Deesynertz\Visitor\Models\VisitorCommonReason;
 
 trait VistorServiceTrait
@@ -72,6 +73,14 @@ trait VistorServiceTrait
 
     function storeVisitorLineItems(PropertyHasVisitor $propertyHasVisitor, $values) {
         return $propertyHasVisitor->visitorLineItems()->create($values);
+    }
+
+    function findVisitorLineItem($id) {
+        return VisitorLineItem::find($id);
+    }
+
+    function updateVisitorLineItems(VisitorLineItem $visitorLineItem, $values) {
+        return $visitorLineItem->update($values);
     }
         
 }

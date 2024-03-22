@@ -4,7 +4,6 @@ namespace Deesynertz\Visitor\Models;
 
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
-use Deesynertz\Visitor\Models\VisitorLineItem;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -15,6 +14,8 @@ class PropertyHasVisitor extends Model
     use HasFactory;
     protected $guarded  = ['id'];
 
+    public function getPropertyableAttribute() { return $this->property->propertyable; }
+    
     public function property(): BelongsTo
     {
         return $this->belongsTo(PropertyVisiting::class, config('property-visitor.column_names.property_visiting_key'), 'id');

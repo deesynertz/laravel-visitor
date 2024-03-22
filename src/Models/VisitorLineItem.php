@@ -24,6 +24,9 @@ class VisitorLineItem extends Model
     //     return is_null()$this->morphTo('visitorable', 'visitorable_type', 'visitorable_id', 'id');
     // }
 
+    public function getPropertyableAttribute() { return $this->propertyHasVisitor->propertyable; }
+    public function getContentAttribute() { return $this->visitingReason->content; }
+
     public function visitorable(): MorphTo
     {
         return $this->morphTo('visitorable', 'visitorable_type', 'visitorable_id', 'id');
