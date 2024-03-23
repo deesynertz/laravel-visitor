@@ -33,6 +33,9 @@ Add the service provider to the `providers` array in your `config/app.php` file:
 
 ### Usage
 
+after Visitor wants to leave the building must sign out so that action will be facilitated by helper function
+`updateEndingAttr()` to change the ending time
+
 add HasVistors
 
 ## Contributions
