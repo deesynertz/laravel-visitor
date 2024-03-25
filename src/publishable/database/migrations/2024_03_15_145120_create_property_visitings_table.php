@@ -68,8 +68,10 @@ class CreatePropertyVisitingsTable extends Migration
                 ->constrained($tableNames['visitor_common_reasons'], 'id')
                 ->cascadeOnUpdate();
             $table->foreignId($columnNames['property_custodian_key'])
+                ->nullable()
                 ->constrained($tableNames['property_custodians'], 'id')
-                ->cascadeOnUpdate();
+                ->cascadeOnUpdate()
+                ->nullOnDelete();
             $table->nullableMorphs('visitorable');
             $table->dateTime('starting');
             $table->dateTime('ending')->nullable();
