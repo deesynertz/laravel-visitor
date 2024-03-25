@@ -4,6 +4,7 @@ namespace Deesynertz\Visitor;
 
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
+use Deesynertz\Visitor\Commands\PropertyVisitorCommand;
 
 class VisitorServiceProvider extends ServiceProvider
 {
@@ -15,6 +16,10 @@ class VisitorServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        if ($this->app->runningInConsole()) {
+            $this->commands([PropertyVisitorCommand::class,]);
+        }
+
         Schema::defaultStringLength(191);
 
         // $this->loadRoutesFrom(__DIR__.'/routes/web.php');

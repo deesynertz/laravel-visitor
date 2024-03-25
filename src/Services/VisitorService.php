@@ -2,7 +2,9 @@
 
 namespace Deesynertz\Visitor\Services;
 
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use Deesynertz\Visitor\Models\VisitorLineItem;
 use Deesynertz\Visitor\Models\PropertyVisiting;
 use Deesynertz\Visitor\Traits\VistorServiceTrait;
 
@@ -103,16 +105,19 @@ class VisitorService
         return $feedback;
     }
 
-    function handleVisitorLineItemUpdate($id, $visitingItems) {
+    function handleVisitorLineItemUpdate($target, $visitingItems) {
         $feedback = httpResponseAttr();
         DB::beginTransaction();
         try {
-            if (!is_null($visitorLineItem = $this->findVisitorLineItem($id))) {
+            $visitorLineItem = $target instanceof VisitorLineItem ? $target : $this->findVisitorLineItem($target);
+
+            if (!is_null($visitorLineItem)) {
                 $feedback->status = $this->updateVisitorLineItems($visitorLineItem, $visitingItems);
                 $visitorLineItem->refresh();
                 DB::commit();
                 $feedback->code = 200;
                 $feedback->content = $visitorLineItem;
+                $feedback->message = 'successfuly!';
             }
         } catch (\Throwable $th) {
             DB::rollBack();
@@ -122,6 +127,40 @@ class VisitorService
         return $feedback;
     }
 
+    public function acticateVisitorModeByDefault($target)
+    {
+        $values = ['property_code' => propertyCodeHelper()];
+        $visitingMode = $this->createOrUpdatePropertyInVisitor($target, 'add', $values);
+        
+        if (!$visitingMode->status) {
+            ## notify user that the visiting mode faild to be activated
+        }
+
+        $visitingMode;
+    }
     
+    public function autoSignoutVisitor($endingTime = null)
+    {
+        $ending = is_null($endingTime) ? now():$endingTime;
+        $values = ['auto_signout' => true];
+        $sixHoursBack = Carbon::create($ending)->subHours(6);
+        $affectedRow = 0;
+
+        $this->visitorLineItemObj()
+            ->select('id','starting','ending')
+            ->whereDate('starting','<=', $sixHoursBack)
+            ->whereNull('ending')
+            ->chunk(20, function ($visitorLineItems) use ($values, &$affectedRow, $endingTime) {
+                foreach ($visitorLineItems as $visitorLineItem) {
+                    $values = array_merge($values, ['ending' => is_null($endingTime) ? now():Carbon::create($endingTime)->addSeconds(35)]);
+                    $feedback = $this->handleVisitorLineItemUpdate($visitorLineItem, $values);
+                    if ($feedback->status) {
+                        $affectedRow += 1;
+                    }
+                }
+            });
+            
+        return $affectedRow;
+    }
     
 }

@@ -15,17 +15,18 @@ class VisitorLineItem extends Model
     use HasFactory;
     protected $guarded  = ['id'];
     protected $dates = ['starting', 'ending'];
-    // protected $casts    = [
-    //     'status'   => 'boolean'
-    // ];
-
-    // public function getEndingAttribute()
-    // {
-    //     return is_null()$this->morphTo('visitorable', 'visitorable_type', 'visitorable_id', 'id');
-    // }
+    protected $casts    = [
+        'auto_signout'   => 'boolean'
+    ];
 
     public function getPropertyableAttribute() { return $this->propertyHasVisitor->propertyable; }
     public function getContentAttribute() { return $this->visitingReason->content; }
+
+    # scope
+    public function scopeWhereDateQuery($query, $params)
+    {
+        
+    }
 
     public function visitorable(): MorphTo
     {

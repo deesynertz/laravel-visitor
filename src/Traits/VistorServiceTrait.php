@@ -18,12 +18,7 @@ trait VistorServiceTrait
             ->withCount(['propertyCustodians as property_custodian_count']);
     }
 
-
-    function commonReasons() {
-        return VisitorCommonReason::query();
-    }
-
-    function createOrUpdatePropertyInVisitor($target, $action, $values = []) {
+    function createOrUpdatePropertyInVisitor($target, $action = 'add', $values = []) {
         $callback = httpResponseAttr();
 
         if ($action == 'add') {
@@ -57,8 +52,6 @@ trait VistorServiceTrait
     }
 
 
-
-
     # visitors
     function visitorsInstances() {
         return PropertyHasVisitor::with('property')
@@ -75,8 +68,16 @@ trait VistorServiceTrait
         return $propertyHasVisitor->visitorLineItems()->create($values);
     }
 
+    function commonReasons() {
+        return VisitorCommonReason::query();
+    }
+
+    function visitorLineItemObj() {
+        return VisitorLineItem::query();
+    }
+
     function findVisitorLineItem($id) {
-        return VisitorLineItem::find($id);
+        return $this->visitorLineItemObj()->find($id);
     }
 
     function updateVisitorLineItems(VisitorLineItem $visitorLineItem, $values) {

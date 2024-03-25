@@ -18,7 +18,6 @@ trait HasVisitors
         return $query->morphMany(config('property-visitor.models.visitor_line_items'), 'visitorable', 'visitorable_type', 'visitorable_id', 'id');
     }
 
-
     # For only User Model
     public function visitings($query): HasMany
     {
@@ -28,5 +27,5 @@ trait HasVisitors
     public function asCustodians($query): HasMany
     {
         return $query->HasMany(config('property-visitor.models.property_custodians'), 'user_id', 'id');
-    }    
+    }
 }

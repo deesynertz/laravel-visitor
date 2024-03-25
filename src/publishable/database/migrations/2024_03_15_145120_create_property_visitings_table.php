@@ -76,6 +76,7 @@ class CreatePropertyVisitingsTable extends Migration
             $table->dateTime('starting');
             $table->dateTime('ending')->nullable();
             $table->longText('description')->nullable();
+            $table->boolean('auto_signout')->default(false);
             $table->timestamps();
         });
     }

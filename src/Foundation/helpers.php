@@ -39,10 +39,10 @@ if (!function_exists('getChildsReasons')) {
 }
 
 if (!function_exists('updateEndingAttr')) {
-    function updateEndingAttr($id, $dateTime = null)
+    function updateEndingAttr($target, $dateTime = null)
     {
         $values = ['ending' => is_null($dateTime) ? now():$dateTime];
-        return (new VisitorService)->handleVisitorLineItemUpdate($id, $values);
+        return (new VisitorService)->handleVisitorLineItemUpdate($target, $values);
     }
 }
 
@@ -85,5 +85,9 @@ if (!function_exists('QRCodeGeneratorHelper')) {
 }
 
 
-
-
+if (!function_exists('visitorModeByDefault')) {
+    function visitorModeByDefault($target)
+    {
+        return (new VisitorService)->acticateVisitorModeByDefault($target);
+    }
+}
