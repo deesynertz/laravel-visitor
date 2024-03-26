@@ -26,7 +26,29 @@ class VisitorService
     }
 
     function getAllVisitors($params = null, $perPage = null) {
-        $results = $this->visitorsInstances()->whereHasProperty($params);
+        $results = $this->visitorsInstances()
+            ->whereHasProperty($params)
+            ->when(isset($params->filter_by), fn ($query) => 
+                $query->when(($params->filter_by == strPropertyOwner()), fn ($query) => 
+                    $query
+                )
+                ->when(isset($params->main_reason), fn ($query) => $query
+                    ->whereHas('visitorLineItems', fn ($lineItemsQuery) => $lineItemsQuery->whereVisitorReasonId($params->main_reason))
+                )
+            );
+
+        return responseBatch($results, $params, $perPage);
+    }
+
+    function getVisitorLineItems($params = null, $perPage = null) {
+        $results = $this->visitorLineItemObj()
+            ->with('visitorable')
+            ->with('visitingReason')
+            ->with('propertyCustodian')
+            ->with(['propertyHasVisitor' => fn ($query) => $query->whereHasProperty($params)])
+            ->wherePropertyHasVisitor($params)
+            ->when(isset($params->main_reason), fn ($query) => $query->whereVisitorReasonId($params->main_reason));
+
         return responseBatch($results, $params, $perPage);
     }
 
@@ -146,7 +168,7 @@ class VisitorService
         $sixHoursBack = Carbon::create($ending)->subHours(6);
         $affectedRow = 0;
 
-        $this->visitorLineItemObj()
+        $this->getVisitorLineItems((object)['query' => true])
             ->select('id','starting','ending')
             ->whereDate('starting','<=', $sixHoursBack)
             ->whereNull('ending')

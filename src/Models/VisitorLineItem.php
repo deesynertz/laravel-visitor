@@ -23,9 +23,9 @@ class VisitorLineItem extends Model
     public function getContentAttribute() { return $this->visitingReason->content; }
 
     # scope
-    public function scopeWhereDateQuery($query, $params)
+    public function scopeWherePropertyHasVisitor($query, $params)
     {
-        
+        return $query->whereHas('propertyHasVisitor', fn ($query) => $query->whereHasProperty($params));
     }
 
     public function visitorable(): MorphTo
