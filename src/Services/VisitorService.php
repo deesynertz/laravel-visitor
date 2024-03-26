@@ -46,8 +46,7 @@ class VisitorService
             ->with('visitingReason')
             ->with('propertyCustodian')
             ->with(['propertyHasVisitor' => fn ($query) => $query->whereHasProperty($params)])
-            ->wherePropertyHasVisitor($params)
-            ->when(isset($params->main_reason), fn ($query) => $query->whereVisitorReasonId($params->main_reason));
+            ->whereParamsQuery($params);
 
         return responseBatch($results, $params, $perPage);
     }

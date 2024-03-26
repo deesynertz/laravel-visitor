@@ -21,12 +21,36 @@ class VisitorLineItem extends Model
 
     public function getPropertyableAttribute() { return $this->propertyHasVisitor->propertyable; }
     public function getContentAttribute() { return $this->visitingReason->content; }
+    public function getReasonParentIdAttribute() { return $this->visitingReason->parent_id; }
 
     # scope
     public function scopeWherePropertyHasVisitor($query, $params)
     {
         return $query->whereHas('propertyHasVisitor', fn ($query) => $query->whereHasProperty($params));
     }
+
+    public function scopeWhereParamsQuery($query, $params)
+    {
+        $mainReason = isset($params->main_reason) ? $params->main_reason:null;
+        $starting = null;
+        $ending = null;
+        
+        if (isset($params->date_between)) {
+            $dateBetween = isset($params->date_between) ? $params->date_between:null;
+            $starting = isset($dateBetween[0]) ? $dateBetween[0]:$starting;
+            $ending = isset($dateBetween[0]) ? $dateBetween[1]:$ending;
+        }
+
+        return $query->whereHas('propertyHasVisitor', fn ($query) => $query->whereHasProperty($params))
+            ->when(!is_null($mainReason), fn ($query) => $query->where(fn ($query) => 
+                $query->whereVisitorReasonId($mainReason)->orWhereHas('visitingReason', fn ($visitingReason) => $visitingReason->whereParentId($mainReason))
+            ))
+            ->where(fn ($query) =>  $query
+                ->when(!is_null($starting), fn ($query) => $query->whereDate('starting', '>=', $starting))
+                ->when(!is_null($ending), fn ($query) => $query->whereDate('ending', '<=', $ending))
+            );
+    }
+
 
     public function visitorable(): MorphTo
     {
