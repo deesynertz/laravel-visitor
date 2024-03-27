@@ -41,7 +41,7 @@ class VisitorLineItem extends Model
             $ending = isset($dateBetween[0]) ? $dateBetween[1]:$ending;
         }
 
-        return $query->whereHas('propertyHasVisitor', fn ($query) => $query->whereHasProperty($params))
+        return $query->wherePropertyHasVisitor($params)
             ->when(!is_null($mainReason), fn ($query) => $query->where(fn ($query) => 
                 $query->whereVisitorReasonId($mainReason)->orWhereHas('visitingReason', fn ($visitingReason) => $visitingReason->whereParentId($mainReason))
             ))

@@ -69,9 +69,6 @@ class VisitorService
             ->first();
     }
 
-    /**
-     */
-    
     function visitingInfoById($id) {
         $callback = null;
 

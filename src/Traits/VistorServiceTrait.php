@@ -18,6 +18,10 @@ trait VistorServiceTrait
             ->withCount(['propertyCustodians as property_custodian_count']);
     }
 
+    function propertyVisitingById($id) {
+        return $this->visitableProperies()->find($id);
+    }
+
     function createOrUpdatePropertyInVisitor($target, $action = 'add', $values = []) {
         $callback = httpResponseAttr();
 

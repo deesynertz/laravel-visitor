@@ -51,7 +51,8 @@ class PropertyHasVisitor extends Model
     }
 
     public function scopeWhereHasProperty($query, $params) {
-        return $query->whereHas('property',  fn ($propertyQuery) => $propertyQuery->whereHasPropertyable($params));
+        return $query->whereHas('property',  fn ($propertyQuery) => $propertyQuery->whereHasPropertyable($params))
+            ->when(isset($params->item_id), fn ($query) => $query->wherePropertyVisitingId($params->item_id));
     }
 
 }
